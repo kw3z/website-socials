@@ -43,7 +43,7 @@ export default function BadApple() {
 
   // Load metadata
   useEffect(() => {
-    fetch('/badapple/meta.json')
+    fetch('/api/badapple/meta.json')
       .then(r => r.json())
       .then(setMeta)
       .catch(err => console.error('Failed to load metadata:', err));
@@ -51,7 +51,7 @@ export default function BadApple() {
 
   // Setup audio element
   useEffect(() => {
-    const audio = new Audio('/badapple/BadApple-sound.mp3');
+    const audio = new Audio('/api/badapple/BadApple-sound.mp3');
     audio.preload = 'auto';
     audio.volume = volume;
     audio.loop = false;
@@ -203,7 +203,7 @@ export default function BadApple() {
     loadedChunks.current.add(chunkIndex);
 
     try {
-      const res = await fetch(`/badapple/chunk-${chunkIndex}.json`);
+      const res = await fetch(`/api/badapple/chunk-${chunkIndex}.json`);
       if (!res.ok) {
         throw new Error(`HTTP ${res.status} fetching chunk-${chunkIndex}.json`);
       }
