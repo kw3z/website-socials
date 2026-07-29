@@ -9,54 +9,36 @@ import type { Social } from '@/data/socials';
 interface SocialCardProps {
   social: Social;
   index: number;
+  initialCount?: number;
+  onIncrement?: (id: string, newCount: number) => void;
 }
 
-export default function SocialCard({ social, index }: SocialCardProps) {
+export default function SocialCard({ social, index, initialCount = 0, onIncrement }: SocialCardProps) {
   const cardRef = useRef<HTMLAnchorElement & HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [copied, setCopied] = useState(false);
-  const [clickCount, setClickCount] = useState<number>(0);
+  const [clickCount, setClickCount] = useState<number>(initialCount);
 
-  // Load click count from localStorage and listen to dynamic increments
+  // Sync when parent loads fresh counts from the API
   useEffect(() => {
+    setClickCount(initialCount);
+  }, [initialCount]);
+
+  const incrementClick = async () => {
+    // Optimistic update
+    const optimistic = clickCount + 1;
+    setClickCount(optimistic);
+    onIncrement?.(social.id, optimistic);
+
     try {
-      const stored = localStorage.getItem(`quesz_clicks_${social.id}`);
-      if (stored) {
-        setClickCount(parseInt(stored, 10) || 0);
-      } else {
-        setClickCount(0);
+      const res = await fetch(`/api/clicks/${social.id}`, { method: 'POST' });
+      if (res.ok) {
+        const { count } = await res.json();
+        setClickCount(count);
+        onIncrement?.(social.id, count);
       }
     } catch {
-      // Ignore localStorage errors
-    }
-
-    const handleAddClick = (e: Event) => {
-      const customEvent = e as CustomEvent<{ amount?: number }>;
-      const amount = customEvent.detail?.amount || 1;
-      setClickCount(prev => {
-        const next = prev + amount;
-        try {
-          localStorage.setItem(`quesz_clicks_${social.id}`, next.toString());
-        } catch {}
-        return next;
-      });
-    };
-
-    window.addEventListener(`quesz_add_click_${social.id}`, handleAddClick);
-    window.addEventListener('quesz_add_click_all', handleAddClick);
-    return () => {
-      window.removeEventListener(`quesz_add_click_${social.id}`, handleAddClick);
-      window.removeEventListener('quesz_add_click_all', handleAddClick);
-    };
-  }, [social.id]);
-
-  const incrementClick = () => {
-    const nextCount = clickCount + 1;
-    setClickCount(nextCount);
-    try {
-      localStorage.setItem(`quesz_clicks_${social.id}`, nextCount.toString());
-    } catch {
-      // Ignore
+      // Keep the optimistic count on network failure
     }
   };
 

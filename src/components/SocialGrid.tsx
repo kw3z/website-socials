@@ -1,10 +1,24 @@
 'use client';
+import { useState, useEffect } from 'react';
 import SocialCard from './SocialCard';
 import { socials } from '@/data/socials';
 import { motion } from 'framer-motion';
 import CopySectionLink from './CopySectionLink';
 
 export default function SocialGrid() {
+  const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    fetch('/api/clicks')
+      .then(r => r.json())
+      .then(setClickCounts)
+      .catch(() => {/* silently ignore — counts just show 0 */});
+  }, []);
+
+  const onIncrement = (id: string, newCount: number) => {
+    setClickCounts(prev => ({ ...prev, [id]: newCount }));
+  };
+
   // Separate projects and main socials
   const projectIds = ['github', 'tmtbl', 'cursor-pack', 'dotfiles'];
   const projects = socials.filter((s) => projectIds.includes(s.id));
@@ -37,7 +51,12 @@ export default function SocialGrid() {
         <div className="bento-grid">
           {sortedSocials.map((social, i) => (
             <div key={social.id} className="bento-item" data-id={social.id}>
-              <SocialCard social={social} index={i} />
+              <SocialCard
+                social={social}
+                index={i}
+                initialCount={clickCounts[social.id] ?? 0}
+                onIncrement={onIncrement}
+              />
             </div>
           ))}
         </div>
@@ -58,7 +77,12 @@ export default function SocialGrid() {
         <div className="projects-grid">
           {projects.map((project, i) => (
             <div key={project.id} className="project-item" data-id={project.id}>
-              <SocialCard social={project} index={i + mainSocials.length} />
+              <SocialCard
+                social={project}
+                index={i + mainSocials.length}
+                initialCount={clickCounts[project.id] ?? 0}
+                onIncrement={onIncrement}
+              />
             </div>
           ))}
         </div>
