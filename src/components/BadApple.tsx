@@ -41,9 +41,11 @@ export default function BadApple() {
   const playingRef = useRef(false);
   const metaRef = useRef<Meta | null>(null);
 
+  const ASSETS_BASE = 'https://github.com/kw3z/website-socials/releases/download/badapple-assets-v1';
+
   // Load metadata
   useEffect(() => {
-    fetch('/badapple/meta.json')
+    fetch(`${ASSETS_BASE}/meta.json`)
       .then(r => r.json())
       .then(setMeta)
       .catch(err => console.error('Failed to load metadata:', err));
@@ -51,7 +53,7 @@ export default function BadApple() {
 
   // Setup audio element
   useEffect(() => {
-    const audio = new Audio('/badapple/BadApple!!-sound.mp3');
+    const audio = new Audio(`${ASSETS_BASE}/BadApple-sound.mp3`);
     audio.preload = 'auto';
     audio.volume = volume;
     audio.loop = false;
@@ -203,7 +205,7 @@ export default function BadApple() {
     loadedChunks.current.add(chunkIndex);
 
     try {
-      const res = await fetch(`/badapple/chunk-${chunkIndex}.json`);
+      const res = await fetch(`${ASSETS_BASE}/chunk-${chunkIndex}.json`);
       if (!res.ok) {
         throw new Error(`HTTP ${res.status} fetching chunk-${chunkIndex}.json`);
       }

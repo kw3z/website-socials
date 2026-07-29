@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large local assets (hosted on GitHub Releases instead)
+/public/badapple/
