@@ -4,39 +4,56 @@ const RELEASE_BASE =
   'https://github.com/kw3z/website-socials/releases/download/badapple-assets-v1';
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const { path } = await params;
   const filePath = path.join('/');
   const url = `${RELEASE_BASE}/${filePath}`;
 
+  // Forward Range header so audio seeking works correctly.
+  // Without this, the browser's range request gets stripped and the CDN
+  // returns the full file from byte 0, making audio restart from the beginning.
+  const upstreamHeaders: HeadersInit = {
+    'User-Agent': 'Mozilla/5.0 (compatible; Next.js server-side proxy)',
+  };
+  const rangeHeader = request.headers.get('Range');
+  if (rangeHeader) {
+    upstreamHeaders['Range'] = rangeHeader;
+  }
+
   try {
     const upstream = await fetch(url, {
       redirect: 'follow',
-      headers: {
-        // Some CDNs block bot-like requests; spoof a browser UA to be safe
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Next.js server-side proxy)',
-      },
+      headers: upstreamHeaders,
     });
 
-    if (!upstream.ok) {
+    // 206 Partial Content is a valid success for range requests
+    if (!upstream.ok && upstream.status !== 206) {
       return new NextResponse(`Upstream error: ${upstream.status}`, {
         status: upstream.status,
       });
     }
 
-    // Stream the body straight through — avoids buffering large chunks in memory
+    const responseHeaders: HeadersInit = {
+      'Content-Type':
+        upstream.headers.get('content-type') ?? 'application/octet-stream',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Access-Control-Allow-Origin': '*',
+      // Tell the browser this resource supports range requests
+      'Accept-Ranges': 'bytes',
+    };
+
+    // Pass through partial-content headers so the browser can seek correctly
+    const contentRange = upstream.headers.get('Content-Range');
+    if (contentRange) responseHeaders['Content-Range'] = contentRange;
+
+    const contentLength = upstream.headers.get('Content-Length');
+    if (contentLength) responseHeaders['Content-Length'] = contentLength;
+
     return new NextResponse(upstream.body, {
-      status: 200,
-      headers: {
-        'Content-Type':
-          upstream.headers.get('content-type') ?? 'application/octet-stream',
-        // Cache aggressively — release assets are immutable
-        'Cache-Control': 'public, max-age=31536000, immutable',
-        'Access-Control-Allow-Origin': '*',
-      },
+      status: upstream.status, // 200 or 206
+      headers: responseHeaders,
     });
   } catch (err) {
     console.error('[badapple proxy] fetch failed:', err);
