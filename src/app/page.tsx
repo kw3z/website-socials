@@ -7,6 +7,7 @@ import SocialGrid from '@/components/SocialGrid';
 import BadApple from '@/components/BadApple';
 import KonamiEgg from '@/components/KonamiEgg';
 import Footer from '@/components/Footer';
+import RedirectModal from '@/components/RedirectModal';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Background />
       <CursorGlow />
       <KonamiEgg />
+      <RedirectModal />
 
       <main className="main-container">
         <Avatar />
