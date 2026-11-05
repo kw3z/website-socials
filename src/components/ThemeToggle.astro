@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+---
+<div class="toggle" role="group" aria-label="Site theme">
+  <button type="button" data-theme-choice="light" aria-pressed="false" aria-label="Light theme"><Icon name="sun" size={16} /></button>
+  <button type="button" data-theme-choice="dark" aria-pressed="false" aria-label="Dark theme"><Icon name="moon" size={16} /></button>
+  <button type="button" data-theme-choice="terminal" aria-pressed="false" aria-label="Terminal mode"><Icon name="terminal" size={16} /></button>
+  <button type="button" data-theme-choice="pixel" aria-pressed="false" aria-label="Pixelified mode"><Icon name="pixel" size={16} /></button>
+</div>
+
+<style>
+  .toggle {
+    display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--radius-pill);
+    background: var(--surface); box-shadow: var(--elev-1), 0 0 0 1px var(--border);
+  }
+  button {
+    display: grid; place-items: center; width: 36px; height: 32px; border-radius: var(--radius-pill);
+    color: var(--text-muted);
+  }
+  button:hover { color: var(--text); }
+  button[aria-pressed='true'] { background: var(--accent); color: var(--on-accent); }
+</style>

@@ -1,0 +1,77 @@
+---
+import Icon from './Icon.astro';
+import { profile } from '../data/profile';
+---
+<div id="presence" class="presence" data-discord-id={profile.discordId} data-host={profile.lanyardHost} data-state="loading">
+  <div class="row status-row">
+    <span class="dot" aria-hidden="true"></span>
+    <p class="t-label" id="status-text">Discord · checking…</p>
+  </div>
+
+  <div class="row activity" id="activity" hidden>
+    <img id="activity-img" class="art" alt="" width="48" height="48" hidden />
+    <div class="meta">
+      <p class="t-eyebrow" id="activity-kind"></p>
+      <p class="title" id="activity-name"></p>
+      <p class="t-meta" id="activity-detail"></p>
+    </div>
+  </div>
+
+  <div class="row spotify" id="spotify" hidden>
+    <img id="spotify-art" class="art" alt="" width="48" height="48" />
+    <div class="meta">
+      <p class="t-eyebrow">
+        <span class="eq" id="spotify-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <Icon name="spotify" size={12} /> <span id="spotify-label">Listening now</span>
+      </p>
+      <p class="title"><a id="spotify-track" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer"></a></p>
+      <p class="t-meta" id="spotify-artist"></p>
+      <div class="bar" id="spotify-bar" role="progressbar" aria-label="Track progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span id="spotify-fill"></span>
+      </div>
+    </div>
+  </div>
+
+  <p class="visually-hidden" aria-live="polite" id="presence-live"></p>
+</div>
+
+<style>
+  [hidden] { display: none !important; }
+
+  .presence {
+    display: grid; gap: var(--space-3); padding: var(--space-4);
+    background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--elev-1);
+    min-height: 56px;
+  }
+  .row { display: flex; gap: var(--space-3); align-items: center; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--status-offline); flex: none; box-shadow: 0 0 0 3px var(--surface-sunken); }
+  [data-status='online'] .dot { background: var(--status-online); animation: pulse 2.4s ease-out infinite; }
+  [data-status='idle'] .dot { background: var(--status-idle); }
+  [data-status='dnd'] .dot { background: var(--status-dnd); }
+  [data-status='offline'] .dot, [data-state='error'] .dot { background: var(--status-offline); }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 3px var(--surface-sunken), 0 0 0 3px transparent; }
+    70%  { box-shadow: 0 0 0 3px var(--surface-sunken), 0 0 0 9px transparent; }
+    100% { box-shadow: 0 0 0 3px var(--surface-sunken), 0 0 0 3px transparent; }
+  }
+
+  .activity, .spotify { padding-top: var(--space-3); border-top: 1px solid var(--border); }
+  .activity:not([hidden]), .spotify:not([hidden]) { animation: row-in 320ms var(--ease-out); }
+  @keyframes row-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .art { flex: none; width: 48px; height: 48px; border-radius: var(--radius-sm); object-fit: cover; background: var(--surface-sunken); }
+  .meta { display: grid; gap: 2px; min-width: 0; flex: 1; }
+  .title { font: 600 .9375rem/1.3 var(--font-ui); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .title a:hover { color: var(--accent); }
+  .meta .t-meta, .meta .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .t-eyebrow { display: inline-flex; align-items: center; gap: var(--space-1); }
+
+  .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; margin-inline-end: var(--space-1); }
+  .eq i { width: 2px; height: 3px; background: var(--accent); border-radius: 1px; animation: eq 900ms ease-in-out infinite alternate; }
+  .eq i:nth-child(2) { animation-delay: -300ms; }
+  .eq i:nth-child(3) { animation-delay: -600ms; }
+  @keyframes eq { from { height: 3px; } to { height: 12px; } }
+
+  .bar { height: 3px; border-radius: 2px; background: var(--surface-sunken); overflow: hidden; margin-top: var(--space-2); }
+  .bar span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 900ms linear; }
+</style>

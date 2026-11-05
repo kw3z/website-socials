@@ -1,0 +1,55 @@
+---
+import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/fraunces/opsz-italic.css';
+import '@fontsource/geist-sans/400.css';
+import '@fontsource/geist-sans/500.css';
+import '@fontsource/geist-sans/600.css';
+import '@fontsource/geist-mono/400.css';
+import '@fontsource-variable/pixelify-sans';
+import siteIcon from '../assets/images/site-icon.png';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props { title: string; description: string; }
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F6F1EA" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16110E" media="(prefers-color-scheme: dark)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <link rel="icon" href={siteIcon.src} type="image/png" />
+    <link rel="apple-touch-icon" href={siteIcon.src} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('quesz.theme');
+        if (t === 'terminal' || t === 'pixel') document.documentElement.dataset.mode = t;
+        else if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true">
+      <span class="o1"></span>
+      <span class="o2"></span>
+      <span class="o3"></span>
+      <span class="grid"></span>
+    </div>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <script>
+      import { initOnRepeat } from '../scripts/onrepeat';
+      initOnRepeat();
+    </script>
+  </body>
+</html>

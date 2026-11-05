@@ -1,0 +1,51 @@
+---
+import * as si from 'simple-icons';
+import { customIcons } from '../assets/icons/custom';
+
+interface Props { name: string; size?: number; }
+const { name, size = 20 } = Astro.props;
+
+const UI: Record<string, string> = {
+  'arrow-up-right': 'M7 17 17 7M7 7h10v10',
+  copy: 'M9 9h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2ZM5 15H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1',
+  check: 'M20 6 9 17l-5-5',
+  mail: 'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm18 2-10 7L2 6',
+  sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  moon: 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z',
+  monitor: 'M3 4h18a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1ZM8 21h8M12 17v4',
+  x: 'M18 6 6 18M6 6l12 12',
+};
+
+const slug = 'si' + name.charAt(0).toUpperCase() + name.slice(1);
+const brand = Reflect.get(si, slug) as { path: string } | undefined;
+const custom = customIcons[name];
+const ui = UI[name];
+---
+{name === 'terminal' ? (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d="M3 8h18M7 12l3 2.5L7 17M13 17h4" />
+  </svg>
+) : name === 'pixel' ? (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
+    <path d="M4 4h6v6H4zM11 4h3v3h-3zM16 4h4v4h-4zM4 11h3v3H4zM9 10h7v7H9zM18 11h2v5h-2zM4 17h4v3H4zM10 19h5v2h-5zM16 18h4v3h-4z" />
+  </svg>
+) : ui ? (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d={ui} />
+  </svg>
+) : brand ? (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+    <path d={brand.path} />
+  </svg>
+) : custom ? (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+    <path d={custom} />
+  </svg>
+) : (
+  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <text x="12" y="16.5" text-anchor="middle" font-family="var(--font-ui)" font-weight="600" font-size="14" fill="currentColor">{name.charAt(0).toUpperCase()}</text>
+  </svg>
+)}

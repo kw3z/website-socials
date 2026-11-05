@@ -1,0 +1,11 @@
+---
+import { profile } from '../data/profile';
+---
+<footer class="footer">
+  <p class="t-meta">© {new Date().getFullYear()} {profile.name} <span id="egg-mark" class="egg" hidden title="Secret found" aria-label="Secret found">✦</span></p>
+</footer>
+
+<style>
+  .footer { padding-top: var(--space-6); border-top: 1px solid var(--border); }
+  .egg { color: var(--text-coat); margin-inline-start: var(--space-2); }
+</style>

@@ -1,0 +1,18 @@
+---
+interface Props { id: string; n: string; title: string; }
+const { id, n, title } = Astro.props;
+---
+<div class="heading">
+  <span class="num t-meta" aria-hidden="true">{n}</span>
+  <span class="dash" aria-hidden="true">—</span>
+  <h2 id={id}>{title}</h2>
+  <span class="rule" aria-hidden="true"></span>
+</div>
+
+<style>
+  .heading { display: flex; align-items: baseline; gap: var(--space-2); }
+  .num { color: var(--text-coat); }
+  .dash { color: var(--text-coat); }
+  h2 { font: 550 var(--text-h2)/1.2 var(--font-display); font-variation-settings: 'opsz' 36; letter-spacing: -.01em; }
+  .rule { flex: 1; height: 1px; background: var(--border); align-self: center; margin-inline-start: var(--space-2); }
+</style>

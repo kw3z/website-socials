@@ -1,0 +1,79 @@
+---
+import avatar from '../assets/images/avatar.png';
+import { profile } from '../data/profile';
+import { links } from '../data/links';
+import { projects } from '../data/projects';
+import ThemeToggle from './ThemeToggle.astro';
+
+const data = {
+  profile,
+  avatar: avatar.src,
+  links: links.map((item) => ({
+    id: item.id,
+    group: item.group,
+    platform: item.platform,
+    kind: item.kind,
+    label: item.kind === 'link' ? item.display : item.kind === 'handle' ? item.value : item.address,
+    hint: item.kind === 'handle' ? item.label : '',
+    href: item.kind === 'link' ? item.href : item.kind === 'email' ? 'mailto:' + item.address : '',
+  })),
+  projects: projects.map(({ title, description, links: projectLinks }) => ({ title, description, links: projectLinks })),
+};
+const dataJSON = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+<section class="terminal-shell" aria-label="Terminal mode">
+  <div class="terminal-frame">
+    <header class="terminal-toolbar">
+      <span class="terminal-title"><i aria-hidden="true"></i> kw3sz@web:~</span>
+      <ThemeToggle />
+    </header>
+    <div class="terminal-screen">
+      <div id="terminal-output" class="terminal-output" role="log" aria-live="polite" aria-label="Terminal output"></div>
+      <form id="terminal-form" class="terminal-prompt">
+        <label for="terminal-input">guest@quesz:~$</label>
+        <input id="terminal-input" name="command" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Enter a terminal command" disabled />
+      </form>
+    </div>
+  </div>
+  <script type="application/json" id="terminal-data" set:html={dataJSON}></script>
+</section>
+
+<style>
+  .terminal-shell { display: none; position: fixed; inset: 0; z-index: 40; padding: 0; background: #101512; color: #d7f5df; font: 400 14px/1.7 var(--font-mono); }
+  .terminal-frame { display: grid; grid-template-rows: auto minmax(0, 1fr); width: 100%; height: 100dvh; margin: 0; overflow: hidden; border: 0; background: #111913; box-shadow: none; }
+  .terminal-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 14px; border-bottom: 1px solid #34513b; background: #18231b; }
+  .terminal-title { display: inline-flex; align-items: center; gap: 9px; color: #a7d4b1; white-space: nowrap; }
+  .terminal-title i { width: 9px; height: 9px; border-radius: 50%; background: #68cf83; box-shadow: 0 0 12px #68cf83; }
+  .terminal-screen { min-height: 0; display: flex; flex-direction: column; padding: clamp(16px, 4vw, 36px); overflow: auto; }
+  .terminal-output { display: grid; align-content: start; gap: 8px; }
+  .terminal-prompt { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; color: #5eff88; }
+  .terminal-prompt label { flex: none; }
+  .terminal-prompt input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: #e9fff0; font: inherit; caret-color: #5eff88; }
+  .terminal-prompt input:disabled { opacity: 0; }
+  :global(.term-line) { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+  :global(.term-dim) { color: #8eaa94; }
+  :global(.term-accent) { color: #5eff88 !important; }
+  :global(.term-intro) { display: flex; align-items: center; gap: 16px; margin: 4px 0 8px; animation: terminal-boot 500ms steps(12, end) both; }
+  :global(.term-avatar) { width: 68px; height: 68px; flex: none; border: 2px solid #83d996; border-radius: 10px; object-fit: cover; image-rendering: pixelated; }
+  :global(.term-intro p) { margin: 1px 0; }
+  :global(.term-name) { color: #effff2; font-size: 1.2rem; font-weight: 600; }
+  :global(.term-link) { color: #a3dfb0; text-decoration: underline; text-underline-offset: 3px; }
+  :global(.term-entry) { display: grid; gap: 2px; margin-block: 2px 8px; }
+  :global(.term-entry small) { color: #8eaa94; }
+  @keyframes terminal-boot { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  :global(:root[data-mode='terminal']) .terminal-shell { display: block; }
+  :global(:root[data-mode='terminal'] body) { overflow: hidden; }
+  :global(:root[data-mode='terminal'] .page),
+  :global(:root[data-mode='terminal'] .skip-link),
+  :global(:root[data-mode='terminal'] #toast),
+  :global(:root[data-mode='terminal'] #konami) { display: none !important; }
+  @media (max-width: 520px) {
+    .terminal-toolbar { padding-inline: 10px; }
+    .terminal-title { font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { :global(.term-intro) { animation: none; } }
+</style>
+
+<script>
+  import '../scripts/terminal';
+</script>

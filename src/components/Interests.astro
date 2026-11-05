@@ -1,0 +1,46 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+<section class="interests" aria-labelledby="interests-heading">
+  <SectionHeading id="interests-heading" n="01" title="Interests" />
+  <div class="interest-grid">
+    <a class="interest card glass" href="https://github.com/kw3z/hyprland-dots" target="_blank" rel="noopener noreferrer" aria-label="View my Arch Linux and Hyprland dotfiles">
+      <span class="interest-icon" aria-hidden="true">⌘</span>
+      <div><h3>Linux</h3><p>Arch Linux · Hyprland WM</p></div>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+    <a class="interest card glass" href="https://anilist.co/user/Quesz/" target="_blank" rel="noopener noreferrer" aria-label="Open my AniList profile">
+      <span class="interest-icon" aria-hidden="true">✦</span>
+      <div><h3>Anime</h3><p>Tracking what I watch</p></div>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+    <a class="interest card glass" href="https://steamcommunity.com/id/kw3sz/" target="_blank" rel="noopener noreferrer" aria-label="Open my Steam profile">
+      <span class="interest-icon" aria-hidden="true">◇</span>
+      <div><h3>Games</h3><p>Playing Pokémon Legends: Arceus</p></div>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+    <a class="interest card glass" href="https://www.instagram.com/queszz_/" target="_blank" rel="noopener noreferrer" aria-label="Open Instagram for my pixel art and posts">
+      <span class="interest-icon" aria-hidden="true">▦</span>
+      <div><h3>Pixel Art</h3><p>Small canvases, lots of pixels</p></div>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .interests { display: grid; gap: var(--space-5); }
+  .interest-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-3); }
+  .interest { position:relative; min-width:0; display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4); border-radius:var(--radius-md); color:inherit; text-decoration:none; transition:transform var(--dur-base) var(--ease-standard),box-shadow var(--dur-base) var(--ease-standard),border-color var(--dur-fast),background var(--dur-fast); }
+  .interest:hover,.interest:focus-visible { transform:translateY(-2px); box-shadow:var(--elev-2); border-color:var(--accent); }
+  .interest-icon { flex:none; width:36px; height:36px; display:grid; place-items:center; border-radius:var(--radius-sm); background:var(--accent-subtle); color:var(--accent); font:600 18px/1 var(--font-mono); transition:background var(--dur-fast) var(--ease-standard),color var(--dur-fast) var(--ease-standard),transform var(--dur-fast) var(--ease-out); }
+  .interest div { flex: 1; min-width: 0; }
+  .interest h3 { font: 600 1rem/1.25 var(--font-ui); }
+  .interest p { color: var(--text-muted); font: 400 .75rem/1.4 var(--font-ui); margin-top: 3px; }
+  .interest:hover .interest-icon,.interest:focus-visible .interest-icon { background:var(--accent); color:var(--on-accent); }
+  .interest:hover .interest-icon { animation:tile-pop 420ms var(--ease-out); }
+  .interest .go { margin-inline-start:auto; flex:none; color:var(--text-muted); transition:transform var(--dur-fast) var(--ease-standard),color var(--dur-fast); }
+  .interest:hover .go,.interest:focus-visible .go { transform:translate(2px,-2px); color:var(--accent); }
+  .interest:active { transform:scale(.985); transition-duration:var(--dur-instant); }
+  @media(max-width:540px) { .interest-grid { grid-template-columns: 1fr; } }
+  @media(prefers-reduced-motion:reduce) { .interest,.interest .go { transition:none; } .interest:hover,.interest:focus-visible,.interest:active { transform:none; } }
+</style>

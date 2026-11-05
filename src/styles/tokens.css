@@ -1,0 +1,199 @@
+@font-face {
+  font-family: 'Monocraft';
+  src: url('/fonts/Monocraft.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #F6F1EA;
+  --surface: #FFFDF9;
+  --surface-sunken: #EFE8DE;
+  --text: #2A211C;
+  --text-muted: #6B5A4E;
+  --text-coat: #8A6440;
+  --ascii-gradient: linear-gradient(90deg, #2878A5 0%, #0F6E6A 52%, #C45D42 100%);
+  --border: #E3D8CB;
+  --accent: #0F6E6A;
+  --accent-hover: #0B5753;
+  --on-accent: #FFFFFF;
+  --accent-subtle: #E2F1EF;
+  --focus-ring: #0F6E6A;
+  --status-soon: #A8402C;
+  --banner: #9FE3DC;
+  --spark: #F2C94C;
+  --status-online: #1F7A4A;
+  --status-idle: #8A6A0E;
+  --status-dnd: #A8402C;
+  --status-offline: #6B5A4E;
+
+  --glow-a: rgb(94 214 204 / .55);
+  --glow-b: rgb(242 201 76 / .42);
+  --glow-c: rgb(240 138 110 / .32);
+  --grid-line: rgb(42 33 28 / .06);
+
+  --glass-bg: rgb(255 253 249 / .62);
+  --glass-border: rgb(42 33 28 / .08);
+  --glass-blur: blur(16px) saturate(140%);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / .7);
+
+  --elev-1: 0 1px 2px rgb(42 33 28 / .06);
+  --elev-2: 0 1px 2px rgb(42 33 28 / .06), 0 10px 24px -6px rgb(42 33 28 / .20);
+  --elev-3: 0 12px 32px -12px rgb(42 33 28 / .22);
+  --elev-4: 0 24px 64px -20px rgb(42 33 28 / .30);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-14: 56px;
+  --space-18: 72px;
+  --space-24: 96px;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --dur-instant: 100ms;
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+  --ease-standard: cubic-bezier(.2, 0, 0, 1);
+  --ease-out: cubic-bezier(.05, .7, .1, 1);
+  --ease-in: cubic-bezier(.3, 0, .8, .15);
+
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-ui: 'Geist Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-display: clamp(2.25rem, 1.8rem + 2vw, 3rem);
+  --text-h2: clamp(1.375rem, 1.2rem + .8vw, 1.625rem);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #16110E;
+  --surface: #211A16;
+  --surface-sunken: #1B1512;
+  --text: #F3EBE1;
+  --text-muted: #B5A595;
+  --text-coat: #C9A27A;
+  --ascii-gradient: linear-gradient(90deg, #5ED6CC 0%, #D8C49B 52%, #F08A6E 100%);
+  --border: #3A2F28;
+  --accent: #5ED6CC;
+  --accent-hover: #7FE0D7;
+  --on-accent: #16110E;
+  --accent-subtle: #173230;
+  --focus-ring: #5ED6CC;
+  --status-soon: #F08A6E;
+  --banner: #12312F;
+  --status-online: #4FD08A;
+  --status-idle: #E3B94A;
+  --status-dnd: #F08A6E;
+  --status-offline: #B5A595;
+
+  --glow-a: rgb(94 214 204 / .38);
+  --glow-b: rgb(201 162 122 / .30);
+  --glow-c: rgb(240 138 110 / .22);
+  --grid-line: rgb(243 235 225 / .05);
+
+  --glass-bg: rgb(33 26 22 / .58);
+  --glass-border: rgb(243 235 225 / .10);
+  --glass-blur: blur(20px) saturate(120%);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / .06);
+
+  --elev-1: inset 0 1px 0 rgb(255 255 255 / .04);
+  --elev-2: inset 0 1px 0 rgb(255 255 255 / .06), 0 12px 28px -8px rgb(0 0 0 / .7);
+  --elev-3: inset 0 1px 0 rgb(255 255 255 / .07), 0 16px 40px -16px rgb(0 0 0 / .7);
+  --elev-4: inset 0 1px 0 rgb(255 255 255 / .08), 0 24px 64px -16px rgb(0 0 0 / .75);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #16110E;
+    --surface: #211A16;
+    --surface-sunken: #1B1512;
+    --text: #F3EBE1;
+    --text-muted: #B5A595;
+    --text-coat: #C9A27A;
+    --ascii-gradient: linear-gradient(90deg, #5ED6CC 0%, #D8C49B 52%, #F08A6E 100%);
+    --border: #3A2F28;
+    --accent: #5ED6CC;
+    --accent-hover: #7FE0D7;
+    --on-accent: #16110E;
+    --accent-subtle: #173230;
+    --focus-ring: #5ED6CC;
+    --status-soon: #F08A6E;
+    --banner: #12312F;
+    --status-online: #4FD08A;
+    --status-idle: #E3B94A;
+    --status-dnd: #F08A6E;
+    --status-offline: #B5A595;
+    --glow-a: rgb(94 214 204 / .38);
+    --glow-b: rgb(201 162 122 / .30);
+    --glow-c: rgb(240 138 110 / .22);
+    --grid-line: rgb(243 235 225 / .05);
+    --glass-bg: rgb(33 26 22 / .58);
+    --glass-border: rgb(243 235 225 / .10);
+    --glass-blur: blur(20px) saturate(120%);
+    --glass-highlight: inset 0 1px 0 rgb(255 255 255 / .06);
+    --elev-1: inset 0 1px 0 rgb(255 255 255 / .04);
+    --elev-2: inset 0 1px 0 rgb(255 255 255 / .06), 0 12px 28px -8px rgb(0 0 0 / .7);
+    --elev-3: inset 0 1px 0 rgb(255 255 255 / .07), 0 16px 40px -16px rgb(0 0 0 / .7);
+    --elev-4: inset 0 1px 0 rgb(255 255 255 / .08), 0 24px 64px -16px rgb(0 0 0 / .75);
+  }
+}
+
+:root[data-mode='pixel'] {
+  color-scheme: dark;
+  --bg: #101820;
+  --surface: #1d2b3a;
+  --surface-sunken: #15212c;
+  --text: #e7f3ff;
+  --text-muted: #a5b8c8;
+  --text-coat: #f0d58a;
+  --ascii-gradient: linear-gradient(90deg, #91A9C2 0%, #8BCB8B 52%, #A8E84F 100%);
+  --border: #526c7c;
+  --accent: #65e572;
+  --accent-hover: #9cf27c;
+  --on-accent: #0a1118;
+  --accent-subtle: #253c40;
+  --focus-ring: #f9d65c;
+  --status-soon: #ffbd69;
+  --banner: #28414d;
+  --spark: #f9d65c;
+  --status-online: #65e572;
+  --status-idle: #f9d65c;
+  --status-dnd: #ff7777;
+  --status-offline: #a5b8c8;
+  --glow-a: rgb(101 229 114 / .22);
+  --glow-b: rgb(249 214 92 / .17);
+  --glow-c: rgb(98 160 220 / .16);
+  --grid-line: rgb(188 224 255 / .1);
+  --glass-bg: #1d2b3a;
+  --glass-border: #526c7c;
+  --glass-blur: none;
+  --glass-highlight: none;
+  --elev-1: 2px 2px 0 #070c11;
+  --elev-2: 3px 3px 0 #070c11;
+  --elev-3: 4px 4px 0 #070c11;
+  --elev-4: 6px 6px 0 #070c11;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-pill: 0px;
+  --font-display: 'Monocraft', var(--font-mono);
+  --font-ui: 'Pixelify Sans Variable', var(--font-mono);
+}

@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '../assets/images/avatar.png';
+import ThemeToggle from './ThemeToggle.astro';
+import { profile } from '../data/profile';
+---
+<header class="header">
+  <div class="banner" aria-hidden="true"></div>
+  <div class="toggle"><ThemeToggle /></div>
+
+  <div class="avatar-wrap">
+    <Image id="avatar" class="avatar" src={avatar} alt={`${profile.name}'s profile picture`} width={112} height={112} loading="eager" fetchpriority="high" />
+  </div>
+
+  <div class="plate glass">
+    <h1>{profile.name}</h1>
+    <p class="t-meta handle">@{profile.handle}</p>
+    <p class="bio">{profile.bio}</p>
+    <pre class="ascii-mark" aria-hidden="true">  █████╗  ██╗   ██╗ ███████╗ ███████╗ ███████╗
+██╔═══██╗ ██║   ██║ ██╔════╝ ██╔════╝ ╚══███╔╝
+██║   ██║ ██║   ██║ █████╗   ███████╗   ███╔╝
+██║▄▄ ██║ ██║   ██║ ██╔══╝   ╚════██║  ███╔╝
+╚██████╔╝ ╚██████╔╝ ███████╗ ███████║ ███████╗
+ ╚══▀▀═╝   ╚═════╝  ╚══════╝ ╚══════╝ ╚══════╝</pre>
+  </div>
+</header>
+
+<style>
+  .header { position: relative; display: grid; }
+  .banner {
+    height: 120px; border-radius: var(--radius-xl); background-color: var(--banner);
+    background-image: radial-gradient(color-mix(in srgb, var(--accent) 36%, transparent) 1px, transparent 1.5px);
+    background-size: 14px 14px; position: relative; overflow: hidden;
+  }
+  .banner::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(112deg, transparent 28%, rgb(255 255 255 / .2) 48%, transparent 68%);
+    background-size: 220% 100%; animation: banner-shimmer 18s ease-in-out infinite;
+  }
+  @keyframes banner-shimmer { 0%, 24% { background-position: 120% 0; } 70%, 100% { background-position: -120% 0; } }
+  @media (min-width: 720px) { .banner { height: 160px; } }
+  .toggle { position: absolute; top: var(--space-3); inset-inline-end: var(--space-3); z-index: 3; }
+
+  .avatar-wrap { position: relative; z-index: 2; width: 96px; height: 96px; margin: -48px 0 0 var(--space-6); }
+  @media (min-width: 720px) { .avatar-wrap { width: 112px; height: 112px; margin-top: -56px; } }
+  .avatar {
+    width: 100%; height: 100%; object-fit: contain; background: var(--surface);
+    border: 4px solid var(--bg); border-radius: 34%;
+  }
+  .plate {
+    position: relative; z-index: 1; margin-top: calc(-1 * var(--space-6)); padding: calc(var(--space-6) + var(--space-3)) var(--space-6) var(--space-6);
+    border-radius: var(--radius-lg); display: grid; gap: var(--space-2);
+  }
+  h1 { font: 600 var(--text-display)/1.05 var(--font-display); font-variation-settings: 'opsz' 72, 'SOFT' 50; letter-spacing: -.02em; }
+  .handle { color: var(--text-muted); }
+  .bio { font-family: var(--font-display); font-style: italic; font-size: 1rem; line-height: 1.5; color: var(--text-muted); max-width: 40ch; margin-top: var(--space-2); }
+  .ascii-mark { max-width: 100%; overflow-x: auto; margin: var(--space-2) 0 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background-color: var(--surface-sunken); background-image: var(--ascii-gradient); background-size: 100% 100%; background-repeat: no-repeat; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font: 500 clamp(5px, 1.1vw, 8px)/1.3 var(--font-mono); white-space: pre; }
+  :global(:root[data-theme='light']) .ascii-mark { background-image: linear-gradient(90deg, #2878A5 0%, #0F6E6A 52%, #C45D42 100%); }
+  :global(:root[data-theme='dark']) .ascii-mark { background-image: linear-gradient(90deg, #5ED6CC 0%, #D8C49B 52%, #F08A6E 100%); }
+  :global(:root[data-mode='pixel']) .ascii-mark { background-image: linear-gradient(90deg, #91A9C2 0%, #8BCB8B 52%, #A8E84F 100%); }
+  @media (prefers-reduced-motion: reduce) { .banner::after { animation: none; } }
+</style>

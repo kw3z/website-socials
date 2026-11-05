@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import type { Project } from '../data/schema';
+import tmtbl from '../assets/images/projects/tmtbl.png';
+import orbit from '../assets/images/projects/orbit.png';
+
+interface Props { project: Project; }
+const { project: p } = Astro.props;
+const logos: Record<string, ImageMetadata> = { tmtbl, orbit };
+const logo = p.logo ? logos[p.logo] : undefined;
+const domain = (u: string) => new URL(u).host.replace(/^www\./, '') + new URL(u).pathname.replace(/\/$/, '');
+
+// Whole card is a link only for single-link projects.
+const single = p.links.length === 1 ? p.links[0]! : null;
+---
+<article class={`card lift ${p.variant}`}>
+  <header class="head">
+    {logo && <Image class="logo" src={logo} alt="" width={40} height={40} loading="lazy" />}
+    <div class="titles">
+      <h3>{single ? <a class="stretch" href={single.href} target="_blank" rel="noopener noreferrer">{p.title}<span class="visually-hidden"> (opens in new tab)</span></a> : p.title}</h3>
+      <div class="tags">
+        {p.featured && <span class="tag featured"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 5.6 4.4 9.4 10 10-5.6.6-9.4 4.4-10 10-.6-5.6-4.4-9.4-10-10 5.6-.6 9.4-4.4 10-10Z" fill="var(--spark)" stroke="var(--text)" stroke-width="1.5" stroke-linejoin="round"/></svg>Featured</span>}
+        {p.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+    </div>
+    {p.status === 'soon' && <span class="stamp">Soon</span>}
+  </header>
+
+  <p class="desc">{p.description}</p>
+
+  {p.variant === 'lead' ? (
+    <div class="foot">
+      <div class="actions">
+        {p.links.map((l, i) => (
+          <Button href={l.href} variant={i === 0 ? 'primary' : 'secondary'} icon={l.kind === 'repo' ? 'arrow-up-right' : 'arrow-up-right'}>{l.label}</Button>
+        ))}
+      </div>
+      <span class="t-meta">{domain(p.links[0]!.href)}</span>
+    </div>
+  ) : single ? (
+    <span class="t-meta foot-meta">{domain(single.href)} <Icon name="arrow-up-right" size={14} /></span>
+  ) : (
+    <div class="actions">{p.links.map((l) => <Button href={l.href} variant="secondary">{l.label}</Button>)}</div>
+  )}
+</article>
+
+<style>
+  .card {
+    position: relative; height: 100%; display: grid; gap: var(--space-4); align-content: start;
+    padding: var(--space-4); background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--elev-1);
+    transition: transform var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  }
+  @media (min-width: 720px) { .card { padding: var(--space-5); } }
+  .card:hover, .card:focus-within { box-shadow: var(--elev-2); }
+  .card.standard:hover, .card.upcoming:hover { transform: translateY(-2px); }
+  .head { display: flex; gap: var(--space-3); align-items: flex-start; }
+  .logo { flex: none; width: 40px; height: 40px; border-radius: var(--radius-sm); box-shadow: 0 0 0 1px var(--border); }
+  .titles { display: grid; gap: var(--space-2); min-width: 0; flex: 1; }
+  h3 { font: 600 1.0625rem/1.35 var(--font-ui); letter-spacing: -.005em; }
+  .stretch::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); }
+  .stretch:focus-visible { outline: none; }
+  .stretch:focus-visible::after { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .tag {
+    display: inline-flex; align-items: center; gap: var(--space-1);
+    font: 400 .75rem/1.2 var(--font-mono); color: var(--text-muted);
+    padding: 3px var(--space-2); border-radius: var(--radius-xs); background: var(--surface-sunken);
+  }
+  .tag.featured { color: var(--text); background: var(--accent-subtle); }
+  .desc { font-size: .9375rem; line-height: 1.5; color: var(--text-muted); max-width: 60ch; }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-2); position: relative; z-index: 1; }
+  .foot { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: space-between; }
+  .foot-meta { display: inline-flex; align-items: center; gap: var(--space-1); }
+  .stamp {
+    flex: none; transform: rotate(-4deg);
+    font: 600 .75rem/1.2 var(--font-ui); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--status-soon); border: 1.5px solid currentColor; border-radius: var(--radius-xs); padding: 3px var(--space-2);
+  }
+  @media (min-width: 720px) {
+    .lead .foot { padding-top: var(--space-4); border-top: 1px solid var(--border); }
+  }
+  @media (prefers-reduced-motion: reduce) { .card.standard:hover, .card.upcoming:hover { transform: none; } .stamp { transform: none; } }
+</style>

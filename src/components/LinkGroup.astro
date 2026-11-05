@@ -1,0 +1,30 @@
+---
+import type { SocialEntry } from '../data/schema';
+import LinkCard from './LinkCard.astro';
+import HandleCard from './HandleCard.astro';
+import DualActionCard from './DualActionCard.astro';
+
+interface Props { label: string; items: SocialEntry[]; }
+const { label, items } = Astro.props;
+const labelId = `g-${label.toLowerCase().replace(/[^a-z]+/g, '-')}`;
+---
+<div class="group">
+  <h3 id={labelId} class="t-eyebrow">{label}</h3>
+  <ul aria-labelledby={labelId}>
+    {items.map((e) => (
+      <li>
+        {e.kind === 'handle' ? <HandleCard entry={e} />
+          : e.kind === 'email' ? <DualActionCard entry={e} />
+          : e.copy ? <DualActionCard entry={e} />
+          : <LinkCard entry={e} />}
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .group { margin-top: var(--space-8); }
+  .group:first-of-type { margin-top: var(--space-6); }
+  ul { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+  @media (min-width: 720px) { ul { grid-template-columns: 1fr 1fr; gap: var(--space-4); } }
+</style>

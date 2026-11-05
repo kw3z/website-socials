@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import ProfileHeader from '../components/ProfileHeader.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import LinkGroup from '../components/LinkGroup.astro';
+import NowPlaying from '../components/NowPlaying.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Footer from '../components/Footer.astro';
+import KonamiNote from '../components/KonamiNote.astro';
+import Toast from '../components/Toast.astro';
+import TerminalMode from '../components/TerminalMode.astro';
+import Interests from '../components/Interests.astro';
+import LiveStats from '../components/LiveStats.astro';
+import BadApple from '../components/BadApple.astro';
+import { groups, links } from '../data/links';
+import { projects } from '../data/projects';
+import { profile } from '../data/profile';
+---
+<Base title={`${profile.name} — links`} description={`${profile.name} (${profile.handle}): social profiles, handles and projects in one place.`}>
+  <div class="page">
+    <aside class="sidebar reveal" style="--i:0">
+      <ProfileHeader />
+      <Interests />
+    </aside>
+
+    <main id="main" class="content">
+      <section aria-labelledby="presence-h" class="reveal" style="--i:1">
+        <h2 id="presence-h" class="visually-hidden">Live status</h2>
+        <NowPlaying />
+      </section>
+
+      <LiveStats />
+
+      <section aria-labelledby="elsewhere-h" class="reveal" style="--i:2">
+        <SectionHeading id="elsewhere-h" n="04" title="Elsewhere" />
+        {groups.map((g) => {
+          const items = links.filter((l) => l.group === g.id);
+          return items.length ? <LinkGroup label={g.label} items={items} /> : null;
+        })}
+      </section>
+
+      <section aria-labelledby="made-h" class="reveal" style="--i:3">
+        <SectionHeading id="made-h" n="05" title="Things I’ve made" />
+        <ul class="projects">
+          {projects.map((p) => <li class={`p-${p.variant}`}><ProjectCard project={p} /></li>)}
+        </ul>
+      </section>
+
+      <BadApple />
+
+      <Footer />
+      <details class="old-site-note">
+        <summary>View the old site</summary>
+        <a href="https://quesz.vercel.app" target="_blank" rel="noopener noreferrer">Open quesz.vercel.app ↗</a>
+      </details>
+    </main>
+  </div>
+  <TerminalMode />
+  <Toast />
+  <KonamiNote />
+  <script>
+    import '../scripts/theme';
+    import '../scripts/copy';
+    import '../scripts/presence';
+    import '../scripts/live-stats';
+    import '../scripts/konami';
+    import '../scripts/ripple';
+  </script>
+</Base>
+
+<style>
+  .sidebar { display:grid; gap:var(--space-6); }
+  .old-site-note { width:100%; min-height:34px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:4px 12px; justify-self:center; align-self:center; position:relative; z-index:2; padding:5px 12px; border:1px solid var(--accent); border-radius:var(--radius-sm); background:var(--accent-subtle); color:var(--text); box-shadow:var(--elev-1); font:600 .75rem/1.35 var(--font-ui); text-align:center; transition:box-shadow var(--dur-fast),background-color var(--dur-fast); }
+  .old-site-note:hover,.old-site-note[open] { background:var(--accent-subtle); box-shadow:var(--elev-2); }
+  .old-site-note summary { cursor:pointer; color:var(--accent); list-style:none; }
+  .old-site-note summary::-webkit-details-marker { display:none; }
+  .old-site-note summary::after { content:'＋'; margin-inline-start:8px; font:500 .75rem/1 var(--font-mono); }
+  .old-site-note[open] summary::after { content:'−'; }
+  .old-site-note a { display:inline-block; margin:0; color:var(--text); transition:transform var(--dur-fast) var(--ease-out),color var(--dur-fast); }
+  .old-site-note a:hover { transform:translateY(-1px); color:var(--accent); }
+  .old-site-note a:active { transform:translateY(1px) scale(.98); }
+  .content { display: grid; gap: var(--space-14); }
+  @media (min-width: 720px) { .content { gap: var(--space-18); } }
+  .projects { display: grid; gap: var(--space-4); margin-top: var(--space-6); }
+  @media (min-width: 720px) {
+    .projects { grid-template-columns: 1fr 1fr; }
+    .projects .p-lead { grid-column: 1 / -1; }
+  }
+</style>

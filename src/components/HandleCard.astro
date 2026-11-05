@@ -1,0 +1,42 @@
+---
+import Icon from './Icon.astro';
+import type { SocialEntry } from '../data/schema';
+interface Props { entry: Extract<SocialEntry, { kind: 'handle' }>; }
+const { entry } = Astro.props;
+---
+<button class="card lift" type="button" data-copy={entry.value} data-copy-label={entry.label}
+        aria-label={`Copy ${entry.label} ${entry.value}`}>
+  <span class="tile"><Icon name={entry.icon} size={20} /></span>
+  <span class="text">
+    <span class="t-label">{entry.platform}</span>
+    <span class="t-meta">{entry.value}</span>
+  </span>
+  <span class="go">
+    <span class="i-copy"><Icon name="copy" size={16} /></span>
+    <span class="i-check"><Icon name="check" size={16} /></span>
+  </span>
+</button>
+
+<style>
+  .card {
+    display: flex; align-items: center; gap: var(--space-3); width: 100%; text-align: start;
+    min-height: 64px; padding: var(--space-4);
+    background: var(--surface); border-radius: var(--radius-md); box-shadow: var(--elev-1);
+    transition: transform var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  }
+  .tile {
+    display: grid; place-items: center; flex: none; width: 40px; height: 40px;
+    background: var(--accent-subtle); color: var(--accent); border-radius: var(--radius-sm);
+    transition: background var(--dur-fast), color var(--dur-fast);
+  }
+  .text { display: grid; min-width: 0; flex: 1; }
+  .go { position: relative; width: 16px; height: 16px; color: var(--text-muted); }
+  .go > span { position: absolute; inset: 0; transition: opacity var(--dur-fast); }
+  .i-check { opacity: 0; color: var(--accent); }
+  .card[data-copied='true'] .i-copy { opacity: 0; }
+  .card[data-copied='true'] .i-check { opacity: 1; }
+  .card:hover, .card:focus-visible { transform: translateY(-2px); box-shadow: var(--elev-2); }
+  .card:hover .tile, .card:focus-visible .tile { background: var(--accent); color: var(--on-accent); }
+  .card:active { transform: scale(.985); transition-duration: var(--dur-instant); }
+  @media (prefers-reduced-motion: reduce) { .card:hover, .card:focus-visible, .card:active { transform: none; } }
+</style>

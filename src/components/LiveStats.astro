@@ -1,0 +1,72 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+<section class="live-stats" aria-labelledby="stats-heading">
+  <SectionHeading id="stats-heading" n="02" title="Live stats" />
+  <div class="stats-grid">
+    <a class="stats-card card glass" href="https://anilist.co/user/Quesz/" target="_blank" rel="noopener noreferrer" aria-labelledby="anilist-title" data-anilist-stats>
+      <header class="stats-head">
+        <div><p class="stats-kicker">ANIME + MANGA</p><h3 id="anilist-title">AniList</h3></div>
+        <span class="stats-arrow" aria-hidden="true">↗</span>
+      </header>
+      <p class="stats-state" data-stats-state>Loading profile stats…</p>
+      <div class="stat-grid" hidden>
+        <div><strong data-stat="anime">—</strong><span>Total anime</span></div>
+        <div><strong data-stat="episodes">—</strong><span>Episodes watched</span></div>
+        <div><strong data-stat="watched">—</strong><span>Hours watched</span></div>
+        <div><strong data-stat="planned">—</strong><span>Hours planned <i>est.</i></span></div>
+        <div><strong data-stat="chapters">—</strong><span>Chapters read</span></div>
+        <div><strong data-stat="current">—</strong><span>Currently watching</span></div>
+      </div>
+      <p class="stats-note">Anime totals and watch counts come from AniList. Planned hours are an estimate from list entries with known runtimes.</p>
+    </a>
+    <a class="stats-card card glass" href="https://github.com/kw3z" target="_blank" rel="noopener noreferrer" aria-labelledby="github-title" data-github-stats>
+      <header class="stats-head">
+        <div><p class="stats-kicker">OPEN SOURCE</p><h3 id="github-title">GitHub</h3></div>
+        <span class="stats-arrow" aria-hidden="true">↗</span>
+      </header>
+      <p class="stats-state" data-stats-state>Loading GitHub stats…</p>
+      <div class="github-numbers" hidden>
+        <div><strong data-github="repos">—</strong><span>Public repos</span></div>
+        <div><strong data-github="stars">—</strong><span>Stars earned</span></div>
+        <div><strong data-github="followers">—</strong><span>Followers</span></div>
+      </div>
+      <div class="contribution-wrap">
+        <div class="contribution-heading"><span>Contributions · past year</span></div>
+        <div class="contribution-image" aria-label="Contribution graph">
+          <img src="https://ghchart.rshah.org/kw3z" alt="Live GitHub contribution graph for kw3z" loading="lazy" />
+        </div>
+      </div>
+      <p class="stats-note" data-github-updated>Stats are read from GitHub’s public profile API.</p>
+    </a>
+  </div>
+</section>
+
+<style>
+  .live-stats { display:grid; gap:var(--space-5); }
+  .stats-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--space-4); }
+  .stats-card { min-width:0; display:grid; align-content:start; padding:var(--space-5); border-radius:var(--radius-lg); color:inherit; text-decoration:none; transition:transform var(--dur-base) var(--ease-standard),box-shadow var(--dur-base) var(--ease-standard),border-color var(--dur-fast); }
+  .stats-card:hover,.stats-card:focus-visible { transform:translateY(-2px); box-shadow:var(--elev-2); border-color:var(--accent); }
+  .stats-card:active { transform:scale(.99); transition-duration:var(--dur-instant); }
+  .stats-head { display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); margin-bottom:var(--space-4); }
+  .stats-kicker { color:var(--text-muted); font:600 .625rem/1.2 var(--font-mono); letter-spacing:.12em; }
+  .stats-head h3 { font:600 1.3rem/1.2 var(--font-display); margin-top:3px; }
+  .stats-arrow { width:32px; height:32px; display:grid; place-items:center; border-radius:50%; color:var(--text-muted); transition:transform var(--dur-fast) var(--ease-out),background var(--dur-fast),color var(--dur-fast); }
+  .stats-card:hover .stats-arrow,.stats-card:focus-visible .stats-arrow { transform:translate(2px,-2px); background:var(--accent-subtle); color:var(--accent); }
+  .stats-state { color:var(--text-muted); font:400 .8125rem/1.5 var(--font-ui); padding-block:var(--space-2); }
+  .stats-state.error { color:var(--status-soon); }
+  .stat-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-4) var(--space-3); }
+  .stat-grid>div,.github-numbers>div { min-width:0; display:grid; gap:3px; }
+  .stat-grid strong,.github-numbers strong { font:600 clamp(1.15rem,2.2vw,1.55rem)/1 var(--font-ui); font-variant-numeric:tabular-nums; letter-spacing:-.04em; }
+  .stat-grid span,.github-numbers span { color:var(--text-muted); font:400 .6875rem/1.35 var(--font-ui); }
+  .stat-grid i { font-style:normal; opacity:.7; }
+  .stats-note { color:var(--text-muted); font:400 .6875rem/1.45 var(--font-ui); margin-top:var(--space-4); }
+  .github-numbers { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-3); }
+  .contribution-wrap { margin-top:var(--space-5); padding-top:var(--space-4); border-top:1px solid var(--border); }
+  .contribution-heading { display:flex; justify-content:space-between; color:var(--text-muted); font:500 .6875rem/1.3 var(--font-ui); margin-bottom:var(--space-3); }
+  .contribution-image { display:block; width:100%; overflow:hidden; border-radius:var(--radius-xs); }
+  .contribution-image img { display:block; width:100%; height:auto; max-width:none; object-fit:contain; object-position:left center; }
+  @media(max-width:420px) { .stats-card { padding:var(--space-4); } }
+  @media(max-width:560px) { .stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(prefers-reduced-motion:reduce) { .stats-card,.stats-arrow { transition:none; } .stats-card:hover,.stats-card:focus-visible,.stats-card:active { transform:none; } }
+</style>

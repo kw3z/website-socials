@@ -1,0 +1,55 @@
+---
+import Icon from './Icon.astro';
+import type { SocialEntry } from '../data/schema';
+interface Props { entry: Extract<SocialEntry, { kind: 'link' | 'email' }>; }
+const { entry } = Astro.props;
+const isEmail = entry.kind === 'email';
+const href = isEmail ? `mailto:${entry.address}` : entry.href;
+const display = isEmail ? entry.address : entry.display;
+const copyValue = isEmail ? entry.address : entry.copy!;
+const copyLabel = isEmail ? 'email address' : `${entry.platform} username`;
+---
+<div class="card lift" data-platform={entry.id}>
+  <a class="main" href={href} {...(isEmail ? {} : { target: '_blank', rel: 'noopener noreferrer' })}>
+    <span class="tile"><Icon name={entry.icon} size={20} /></span>
+    <span class="text">
+      <span class="t-label">{entry.platform}</span>
+      <span class="t-meta">{display}</span>
+    </span>
+    {!isEmail && <span class="visually-hidden">(opens in new tab)</span>}
+  </a>
+  <button class="copy" type="button" data-copy={copyValue} data-copy-label={copyLabel}
+          aria-label={`Copy ${copyLabel} ${copyValue}`}>
+    <span class="i-copy"><Icon name="copy" size={16} /></span>
+    <span class="i-check"><Icon name="check" size={16} /></span>
+  </button>
+</div>
+
+<style>
+  .card {
+    display: flex; align-items: center; min-height: 64px;
+    background: var(--surface); border-radius: var(--radius-md); box-shadow: var(--elev-1);
+    transition: transform var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  }
+  .card:hover, .card:focus-within { transform: translateY(-2px); box-shadow: var(--elev-2); }
+  .main { display: flex; align-items: center; gap: var(--space-3); flex: 1; min-width: 0; padding: var(--space-4); border-radius: var(--radius-md); }
+  .tile {
+    display: grid; place-items: center; flex: none; width: 40px; height: 40px;
+    background: var(--accent-subtle); color: var(--accent); border-radius: var(--radius-sm);
+    transition: background var(--dur-fast), color var(--dur-fast);
+  }
+  .main:hover .tile, .main:focus-visible .tile { background: var(--accent); color: var(--on-accent); }
+  .text { display: grid; min-width: 0; }
+  .text .t-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy {
+    position: relative; flex: none; width: 44px; height: 44px; margin-inline-end: var(--space-2);
+    display: grid; place-items: center; color: var(--text-muted); border-radius: var(--radius-sm);
+    transition: background var(--dur-fast), color var(--dur-fast);
+  }
+  .copy:hover { background: var(--accent-subtle); color: var(--accent); }
+  .copy > span { position: absolute; display: grid; place-items: center; transition: opacity var(--dur-fast); }
+  .i-check { opacity: 0; color: var(--accent); }
+  .copy[data-copied='true'] .i-copy { opacity: 0; }
+  .copy[data-copied='true'] .i-check { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .card:hover, .card:focus-within { transform: none; } }
+</style>
